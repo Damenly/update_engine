@@ -38,6 +38,10 @@ int DaemonChromeOS::OnInit() {
   // handler.
   subprocess_.Init(this);
 
+  // ---***FYDEOS BEGIN***---
+  license_checker_.Init();
+  // ---***FYDEOS END***---
+
   int exit_code = Daemon::OnInit();
   if (exit_code != EX_OK)
     return exit_code;

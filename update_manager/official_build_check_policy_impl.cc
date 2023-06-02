@@ -26,6 +26,8 @@ EvalStatus OnlyUpdateOfficialBuildsPolicyImpl::Evaluate(
     State* state,
     std::string* error,
     PolicyDataInterface* data) const {
+// ---***FYDEOS BEGIN***---
+  /*
   const bool* is_official_build_p =
       ec->GetValue(state->system_provider()->var_is_official_build());
   if (is_official_build_p != nullptr && !(*is_official_build_p)) {
@@ -40,6 +42,8 @@ EvalStatus OnlyUpdateOfficialBuildsPolicyImpl::Evaluate(
     LOG(INFO) << "Unofficial build, but periodic update check interval "
               << "timeout is defined, so update is not blocked.";
   }
+  */
+// ---***FYDEOS END***---
   return EvalStatus::kContinue;
 }
 

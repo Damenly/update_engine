@@ -71,6 +71,7 @@
 #include "update_engine/update_manager/omaha_request_params_policy.h"
 #include "update_engine/update_manager/update_manager.h"
 #include "update_engine/update_status_utils.h"
+#include "update_engine/cros/fydeos_toggle_ota.h"
 
 using base::FilePath;
 using base::Time;
@@ -205,6 +206,11 @@ bool UpdateAttempter::ScheduleUpdates(const ScheduleUpdatesParams& params) {
     if (status_ == UpdateStatus::IDLE) {
       UpdateCheckAllowedPolicyDataOverrider();
     }
+    return false;
+  }
+
+  if (!fydeos::OTAEnabled()) {
+    LOG(INFO) << "fydeos ota disabled, skip scheduling updates";
     return false;
   }
 
@@ -1044,6 +1050,13 @@ bool UpdateAttempter::CheckForUpdate(
     LOG(INFO) << "Update check is only going to query server for update, will "
               << "not be applying any updates.";
   }
+  // ---***FYDEOS BEGIN***---
+  if (!fydeos::OTAEnabled()) {
+    LOG(INFO) << "fydeos ota disabled, refuse to check for update";
+    BroadcastStatus();
+    return false;
+  }
+  // ---***FYDEOS END***---
 
   LOG(INFO) << "Forced update check requested.";
   forced_app_version_.clear();

@@ -212,6 +212,8 @@ static_library("libupdate_engine") {
     "cros/requisition_util.cc",
     "cros/shill_proxy.cc",
     "cros/update_attempter.cc",
+    "cros/fydeos_license_checker.cc",
+    "cros/fydeos_toggle_ota.cc",
     "libcurl_http_fetcher.cc",
     "metrics_utils.cc",
     "update_boot_flags_action.cc",

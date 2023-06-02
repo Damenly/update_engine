@@ -24,6 +24,9 @@
 #include "update_engine/common/subprocess.h"
 #include "update_engine/cros/dbus_service.h"
 #include "update_engine/cros/real_system_state.h"
+// ---***FYDEOS BEGIN***---
+#include "update_engine/cros/fydeos_license_checker.h"
+// ---***FYDEOS END***---
 
 namespace chromeos_update_engine {
 
@@ -47,6 +50,8 @@ class DaemonChromeOS : public DaemonBase {
   // the main() function. This has to be defined before system_state_ because of
   // dependency.
   Subprocess subprocess_;
+
+  fydeos::FydeLicenseChecker license_checker_;
 
   // |SystemState| is a global context, but we can't have a static singleton of
   // its object because the style guide does not allow that (it has non-trivial

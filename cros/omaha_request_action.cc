@@ -55,6 +55,9 @@
 #include "update_engine/cros/payload_state_interface.h"
 #include "update_engine/cros/update_attempter.h"
 #include "update_engine/metrics_utils.h"
+// ---***FYDEOS BEGIN***---
+#include "update_engine/cros/fydeos_toggle_ota.h"
+// ---***FYDEOS END***---
 
 using base::Time;
 using base::TimeDelta;
@@ -1262,9 +1265,9 @@ bool OmahaRequestAction::ShouldIgnoreUpdate(ErrorCode* error) const {
     }
   }
 
-  if (!CheckForRepeatedFpValues(error)) {
-    return true;
-  }
+  // if (!CheckForRepeatedFpValues(error)) {
+  //   return true;
+  // }
 
   if (hardware->IsOOBEEnabled() && !hardware->IsOOBEComplete(nullptr) &&
       (response_.deadline.empty() ||
@@ -1298,6 +1301,11 @@ bool OmahaRequestAction::ShouldIgnoreUpdate(ErrorCode* error) const {
   // from happening as there are no packages in the response to process.
   if (response_.packages.empty()) {
     LOG(ERROR) << "All packages were excluded.";
+  }
+
+  if (!fydeos::OTAEnabled()) {
+    LOG(INFO) << "fydeos ota disabled, ignore update";
+    return true;
   }
 
   // Note: We could technically delete the UpdateFirstSeenAt state when we

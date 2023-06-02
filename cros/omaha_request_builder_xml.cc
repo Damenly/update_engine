@@ -36,6 +36,9 @@
 #include "update_engine/common/utils.h"
 #include "update_engine/cros/omaha_request_params.h"
 #include "update_engine/cros/update_attempter.h"
+// ---***FYDEOS BEGIN***---
+#include "update_engine/cros/fydeos_license_checker.h"
+// ---***FYDEOS END***---
 
 using std::string;
 
@@ -302,6 +305,11 @@ string OmahaRequestBuilderXml::GetApp(const OmahaAppData& app_data) const {
     app_versions = "version=\"" +
                    XmlEncodeWithDefault(app_data.version, kNoVersion) + "\" ";
   }
+  // ---***FYDEOS BEGIN***---
+  string license_id = fydeos::FydeLicenseChecker::Get().GetLicenseId();
+  string fydeos_license_id =
+      "fydeos_license_id=\"" + XmlEncodeWithDefault(license_id) + "\" ";
+  // ---***FYDEOS END***---
 
   string download_channel = params->download_channel();
   string app_channels =
@@ -410,6 +418,9 @@ string OmahaRequestBuilderXml::GetApp(const OmahaAppData& app_data) const {
       // DLC excluded for installs and updates.
       (app_data.is_dlc ? "" : requisition_arg) +
 
+      // ---***FYDEOS BEGIN***---
+      fydeos_license_id +
+      // ---***FYDEOS END***---
       ">\n" +
          app_body +
       "    </app>\n";
