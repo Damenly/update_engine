@@ -38,6 +38,7 @@
 #include "update_engine/update_manager/update_can_be_applied_policy.h"
 #include "update_engine/update_manager/update_can_be_applied_policy_data.h"
 #include "update_engine/update_manager/update_manager.h"
+#include "update_engine/cros/fydeos_toggle_ota.h"
 
 using chromeos_update_manager::kRollforwardInfinity;
 using chromeos_update_manager::UpdateCanBeAppliedPolicy;
@@ -82,6 +83,14 @@ void OmahaResponseHandlerAction::PerformAction() {
   // |OmahaRequestAction| and keep the enforcement of exclusions for updates.
   install_plan_.download_url = current_url;
   install_plan_.version = response.version;
+
+  // ---***FYDEOS BEGIN***---
+  if (!fydeos::OTANeeded(response.version)) {
+    LOG(INFO) << "fydeos ota unnedded, refuse to continue update";
+    completer.set_code(ErrorCode::kDownloadNewPartitionInfoError);
+    return ;
+  }
+  // ---***FYDEOS END***---
 
   OmahaRequestParams* const params = SystemState::Get()->request_params();
   PayloadStateInterface* const payload_state =
